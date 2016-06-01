@@ -1,0 +1,473 @@
+-------------------jquery在内存中是怎么样的一种现状----------
+
+
+-------------------异步队列--------------------------
+Deferred 
+
+1:为什么叫做异步队列.
+2:实现异步队列有什么用.
+3:又该实现自己定制
+4:自己定制又能实现什么功能?
+
+
+
+jQuery.Callbacks(flags)
+返回一个链式工具对象.管理一组回调函数.叫做"回调函数列表"
+
+
+通过这样
+self=
+
+
+
+整个jquery的框架架构是怎样的?为什么this经常可以调用?
+整个页面dom文档中jquery对象又是怎样进行存储的?什么时候又会产生新的jquery对象?
+每个jquery对象之间是共享一份代码方法亦或是怎样,这又是怎样反映在浏览器的内存中的?
+
+
+s参数可选项(当前请求的完整选项集?为什么叫做完整选项集?对原生的选项添加了些什么东西?转换器,还有??)\
+---数据类型{function,{},[],o,},描叙,
+option={
+	type 			请求类型,get/post
+	url				请求而地址
+	async			是否为异步模式,true为异步模式,false为同步模式
+	username
+	password
+	mimeType  		响应头类型即Content-Type的值
+	xhrFields
+	crossDomain
+	hasContent
+	data 			发送给服务器的数据?格式是怎样的?
+	dataFilter		function,对返回的原始数据进行自定义的过滤
+	dataTypes		响应的数据类型
+	converters		{"text script":function,},数据转换器集,
+
+	beforeSend		function,
+	success			function,
+	error			function
+	complete		function,
+	statusCode		{404:function,}
+	global 			是否启用全局事件
+
+}
+
+
+全局事件的设置
+$('#loading')
+	.on('ajaxStart',function())
+
+本地事件
+beforeSend
+success
+error
+complete
+statusCode
+
+全局事件类型
+ajaxStart
+ajaxSend
+ajaxSuccess
+ajaxError
+ajaxComplete
+ajaxStop
+
+对于跨域script或跨域jsonp请求,不会触发全局事件
+
+
+
+
+
+
+xhr状态可选项,可定制项
+xhr{
+	readyState 
+}
+
+
+                                                                                                     
+浏览没有规范化的对象,元素?---------->官方文档?
+1.JSON
+JSON.parse(text[,reviver])
+text待解析为JSON对象的字符串
+reviver可选.在返回解析结果前,对解析结果中的属性进行修改啊
+JSON.stringify()
+---待补充
+
+2:标准解析器.在HTML5中标准化
+DOMParser可以将XML或HTML字符串解析为一个DOM文档
+
+
+
+3:在全局作用域中执行js代码
+ie:execScript()
+evel()
+
+
+---待扩展
+检查JSON字符串是否合法的正则逻辑来源于JSON解析库json2.js
+1:在jquery.JSON中检查json字符串是否有效的逻辑
+2:什么浏览器原生方法支持把字符串当成js代码执行
+
+
+
+---把数组,对象浅层,深度序列化为一段URL查询串这里在客户端jquery.param有函数提供
+那么在tomcat后面提供怎样的方法获取该url查询串,并还原为对象
+
+
+
+
+
+
+
+
+script元素属性可定制性,又在什么时候会发生怎么样的改变
+
+// 在全局域中执行js代码
+// http://weblogs.java.net/blog/driscoll/archive/2009/09/08/eval-javascript-global-context
+
+
+
+-----在html5中如果
+在from表单里面包裹的元素(是不是只有表单元素才会??)
+如果在from中设置可action如果有
+提交按钮submit就会自动获取from中元素的值并进行action指定url的请求,并且自动带上参数,
+但是应该怎样进行设置,怎样进行操纵,
+from又是一个什么样的元素.又有哪些属性,函数?
+
+
+-----------------选择器Sizzle----------------------------
+1:浏览器提供了哪些原生方法?
+	w3c selectors api 
+	www.w3.org/TR/selectors-api/ 
+	www.w3.org/TR/css3-selectors/
+	querySelector()
+	querySelectorAll() 
+
+getElementById
+getElementsByName
+getElementsByTagName
+
+
+
+2:能解决什么东西?
+3:在哪些模块运用了?
+
+
+块间关系符
+">"父子
+" "祖先
+"+"紧挨着的兄弟元素
+"~"之后的所有兄弟元素
+
+
+
+??context.nodeType != 1 && context.nodeType != 9
+dom元素都有哪些哪些数据类型,nodeType有指示
+
+
+??提供了哪些全局对象,又都有哪些原生的属性以及方法?
+doucment
+window
+
+
+
+----jquery选择器总结----来源网上
+一、基本选择器
+1. id选择器（指定id元素）
+2. class选择器（遍历css类元素）
+3. element选择器（遍历html元素）
+4. * 选择器（遍历所有元素）
+5. 并列选择器$('p,div').css('margin', '0');
+二、 层次选择器
+1. parent > child（直系子元素）
+2. prev + next（下一个兄弟元素，等同于next()方法）
+3. prev ~ siblings（prev元素的所有兄弟元素，等同于nextAll()方法）
+三、 过滤选择器
+1. 基本过滤选择器
+——1.1 :first和:last（取第一个元素或最后一个元素）
+——1.2 :not（取非元素）
+$('div:not(.wrap)').css('color', '#FF0000');
+——1.3 :even和:odd（取偶数索引或奇数索引元素，索引从0开始，even表示偶数，odd表示奇数）
+——1.4 :eq(x) （取指定索引的元素）
+——1.5 :gt(x)和:lt(x)（取大于x索引或小于x索引的元素）
+　　　　　　　$('ul li:gt(2)').css('color', '#FF0000'); $('ul li:lt(2)').css('color', '#0000FF');
+——1.6 :header（取H1~H6标题元素）
+$(':header').css('background', '#EFEFEF');
+2. 内容过滤选择器
+  ——2.1 :contains(text)（取包含text文本的元素）
+$('dd:contains("jQuery")').css('color', '#FF0000');
+
+——2.2 :empty（取不包含子元素或文本为空的元素）
+
+$('dd:empty').html('没有内容');——2.3 :has(selector)（取选择器匹配的元素）$('div:has(span)').css('border', '1px solid #000');
+
+——2.4 :parent（取包含子元素或文本的元素）$('ol li:parent').css('border', '1px solid #000');
+3. 可见性过滤选择器
+——3.1 :hidden（取不可见的元素）
+jQuery 至1.3.2之后的:hidden选择器仅匹配display:none或的元素，而不匹配visibility: hidden或opacity:0的元素。这也意味着hidden只匹配那些“隐藏的”并且不占空间的元素，像visibility:hidden或 opactity:0的元素占据了空间，会被排除在外。
+——3.2 :visible（取可见的元素）
+4. 属性过滤选择器
+——4.1 [attribute]（取拥有attribute属性的元素）
+$('a[title]').css('text-decoration', 'none');
+——4.2 [attribute = value]和[attribute != value]（取attribute属性值等于value或不等于value的元素）
+$('a[class=item]').css('color', '#FF99CC');$('a[class!=item]').css('color', '#FF6600');
+
+
+——4.3 [attribute ^= value], [attribute $= value]和[attribute *= value]（attribute属性值以value开始，以value结束，或包含value值）
+——4.4 [selector1][selector2]（复合型属性过滤器，同时满足多个条件）
+
+
+5. 子元素过滤选择器
+——5.1 :first-child和:last-child
+——5.2 :only-child
+当某个元素有且仅有一个子元素时，:only-child才会生效。
+——5.3 :nth-child
+:nth-child有三种用法：
+1) :nth-child(x)，获取第x个子元素 
+2) :nth-child(even)和:nth-child(odd)，从1开始，获取第偶数个元素或第奇数个元素 
+3) :nth-child(xn+y)，x>=0，y>=0。例如x = 3, y = 0时就是3n，表示取第3n个元素（n>=0）。实际上xn+y是上面两种的通项式。（当x=0,y>=0时，等同于:hth- child(x)；当x=2,y=0时，等同于nth-child(even)；当x=2,y=1时，等同于:nth-child(odd)）
+ 
+6. 表单对象属性过滤选择器
+——6.1 :enabled和:disabled（取可用或不可用元素）
+:enabled和:diabled的匹配范围包括input, select, textarea。
+——6.2 :checked（取选中的单选框或复选框元素）
+下面的代码，更改边框或背景色仅在IE下有效果，chrome和firefox不会改变，但是alert都会弹出来。
+——6.3 :selected（取下拉列表被选中的元素）
+ 
+四、表单选择器
+1. :input（取input,textarea,select,button元素）
+:input元素这里就不再多说了，前面的一些例子中也已经囊括了。
+2. :text（取单行文本框元素）和:password（取密码框元素）
+这两个选择器分别和属性选择器$('input[type=text]')、$('input[type=password]')等同。
+3. :radio（取单选框元素）
+:radio选择器和属性选择器$('input[type=radio]')等同
+4. :checkbox（取复选框元素）
+:checkbox选择器和属性选择器$('input[type=checkbox]')等同
+5. :submit（取提交按钮元素）
+:submit选择器和属性选择器$('input[type=submit]')等同
+6. :reset（取重置按钮元素）
+:reset选择器和属性选择器$('input[type=reset]')等同
+7. :button（取按钮元素）
+:button选择器和属性选择器$('input[type=button]')等同
+8. :file（取上传域元素）
+:file选择器和属性选择器$('input[type=file]')等同
+9. :hidden（取不可见元素）
+:hidden选择器和属性选择器$('input[type=hidden]')等同
+
+
+
+------------------------------------------------------------------------------------jquery对象------------------------------------
+属性
+length
+=0,空对象
+$[n]		o,
+content 	o,
+selector 	string,
+
+
+jQuery.fn.init: function(selector, context, rootjQuery) {
+如果selector是字符串
+	如果selector是html片段
+		如果match[1]是简单标签
+			如果context是简单对象
+				selector = [document.createElement(ret[1])];
+				jQuery.fn.attr.call(selector, context, true); ---------------待定
+			如果不是简单对象
+				selector = [doc.createElement(ret[1])];
+		如果match[1]不是简单html片段
+			ret = jQuery.buildFragment([match[1]], [doc]);
+			selector = (ret.cacheable ? jQuery.clone(ret.fragment) : ret.fragment).childNodes;
+...
+
+如果传进来的是jquery对象
+	把传进的jquery对象的上下文传给当前对象的context
+	把传进的jquery对象的选择器传给当前对象的选择器
+
+
+
+
+jQuery.buildFragment = function(args, nodes, scripts){
+	修正文档对象doc
+}
+
+buildFragment在哪些函数中被调用
+init();
+.domMainp();
+
+clean: function(elems, context, fragment, scripts){
+	
+}
+
+
+clean在哪些函数中被调用
+buildFragment
+
+
+
+jquery中一些原生方法
+
+
+
+
+
+
+-------------浏览器功能测试support------------
+1:测试是否能够正确复制单选按钮,复选框的选中状态--------jQuery.support.checkClone--------buildFragment
+2:测试否否能够正确复制html5元素------------------------jQuery.support.html5Clone--------buildFragment
+3:Query.support.tbody	是否为table元素生成tbody元素 ---------------->clean: 
+4:jQuery.support.leadingWhitespace 是否自动删除前导空白-------------->clean:
+5:jQuery.support.appendChecked
+
+
+
+
+
+
+
+---------------------------------------------------------DOM遍历traversing---------------------------
+原生方法
+nextSibing
+priviousSibling
+partentNode
+然后对jquery对象里面的每个元素都进行相同的操作,然后对操作的结果进行去重,排序,然后组装成一个新的jquery对象那个进行返回
+
+
+工具函数
+dir: function(elem, dir, until){
+	//怎么判断传进来的函数是在until里面的?
+	jQuery(cur).is(until))
+}
+
+---------------------------------------------------------DOM操作manipulation---------------------------
+浏览器原生方法
+elem.appendChild(elem);					elemt,要插入的dom元素
+elem.insertBefore(elem,who)				elem,要插入的元素,who,在哪个元素之前插入
+innerHtml
+cloneNode
+clearAttributes
+mergeAttributes
+
+jquery方法
+
+domManip: function(args, table, callback)
+.html[[value]]本质是调用innerHtml,如果没有传入参数,则返回jquery第一个元素上的innerHtml,如果传入了参数则在jquery元素集合中先进行修正(如果需要)然后在每个元素中直接设置innerHtml,如果抛出异常则先进行清空然后在执行append
+
+
+
+filter()
+
+
+
+
+
+
+---------------------------------------------------------问题-----------------------------------------
+1:为什么通过一个公用class绑定click事件,在回调函数里面可以运用$(this)获取当前对象
+	因为jquery会调用.each()方法调用每个callback函数,但是不是直接调用,而是在调用的时候运用callback.call()方法在.call()方法的里面的第一个对象传进去的就是每个匹配的elem元素.这依靠的是js的原生方法的实现,具体有待进一步分析.
+	2:那么传进去的每个对象是dom的元素,还是jquery封装的元素?
+2:如果一个class对象多个dom元素,那么jquery是怎么组织对象的,在调用事件绑定函数的时候,又是怎样组织这些事件的发生顺序的?这是否就是事件系统里面要考虑的事情
+	为什么jquery调用数组的push[]方法就能够把多个elem元素存放到当前的juery对象里面.这是否就是模仿数组的实现,但是,js又是怎样说支持这些的,这些东西本质上叫做什么,js文档里面似乎缺少一套解释
+
+
+
+
+
+----------------------事件系统Events--------------------------
+
+1:原生方法
+browser都支持的事件类型,以及事件被触发之后进行相应的方式以及传递的数据以及能进行的操作(这似乎是取决于自己页面的设计)
+addEventListener
+attachEvent
+
+2:jquery方法
+	底层方法:
+
+	公开方法:
+
+
+3:question
+	所谓的事件冒泡指什么?
+	这里的冒泡是否就是指发生事件的子元素向其父元素传递事件的过程
+	2
+
+	键盘事件对象的属性和修正方法能够进行哪些操做
+	鼠标事件对象的属性和修正方法能够进行哪些操做
+
+	??浏览器支持的原生手动触发事件方法有哪些
+
+	jquery事件对象
+	jquery事件系统
+
+
+4:
+这里的jquery事件对象指的是下面的jQuery.Event
+原生事件对象包含的属性
+type
+事件类型,具体指的是什么??
+timeStamp
+srcElement
+defaultPrevented
+returnValue
+getPreventDefault
+
+
+
+this的属性
+timeStamp	  这里用的是3级dom规定的事件类型即使一个数值,而不是Data类型
+isDefaultPrevented
+originalEvent 如果有这个属性,说明该对象是原生的事件对象,否则为自定义的jquery事件对象.
+target
+
+
+
+
+
+
+5:方法分析
+创建一个事件对象
+jQuery.Event = function(src, props){
+	把src对事件类型置换成自己的事件类型
+	修正是否阻止默认冒泡行为??
+	修正timeStamp
+}
+
+
+6:关于2级,3级dom事件模型
+2级dom事件模型规定事件属性timeStamp的值是一个Data对象
+3级dom事件模型规定事件属性timeStamp的值是数值型.事件毫秒数
+
+7:相关事件以及行为
+focus,不冒泡
+blur,不冒泡
+
+
+elem对象关联的数据缓存对象都有哪些属性,以及都在哪些用途上面
+
+---jQuery._data(elem)
+{
+	events:{
+		handlers每个类型的事件对应一个事件数组[],且数组含有delegateCount属性表明其
+	},事件缓存对象
+	handle:function,主监听函数
+}
+// 这里的events指的是jQuery里面的events
+// events
+// {
+// 	special
+// }
+special
+{
+	delegateType
+	bindType
+	add
+}
+
+
+hasData()
+_data()
+
+
+
+
+
+
