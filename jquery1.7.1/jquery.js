@@ -22,7 +22,6 @@
 	// 这里返回的jquery是一个函数
 	// 那么是一个函数应该关注什么呢?
 	// 输入输出参数,明显这里面的输入就是$()接受的形参
-	// 而输出就是一个jquery对象.其是怎么做到的?
 	var jQuery = (function() {
 
 		// Define a local copy of jQuery
